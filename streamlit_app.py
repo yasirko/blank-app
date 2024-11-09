@@ -253,7 +253,7 @@ def check_tickers(tickers, percentage):
     return results
 
 # Streamlit app
-st.title("فاحص أسعار الأسهم")
+st.title("فاحص القاع السنوي للأسهم")
 
 # Input for tickers
 default_tickers = ', '.join([
