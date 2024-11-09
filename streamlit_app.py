@@ -297,7 +297,9 @@ default_tickers = ', '.join([
     '8170.SR', '8180.SR', '8190.SR', '8200.SR', '8210.SR', '8230.SR', 
     '8240.SR', '8250.SR', '8260.SR', '8270.SR', '8280.SR', '8300.SR', 
     '8310.SR', '8311.SR'
-]).upper()
+])
+# Convert default_tickers to uppercase
+default_tickers = default_tickers.upper()
 tickers_input = st.text_area("أدخل رموز الأسهم (مفصولة بفواصل)", value=default_tickers)
 tickers_to_check = [ticker.strip() for ticker in tickers_input.split(',')]
 
