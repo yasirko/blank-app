@@ -240,7 +240,7 @@ def check_tickers(tickers, percentage):
             # Check if current price is between lowest price and lowest price * multiplier
             if lowest_price <= current_price <= lowest_price * multiplier:
                 # Remove '.SR' if the ticker is a number
-                display_ticker = ticker.replace('.SR', '') if ticker.replace('.SR', '').isdigit() else ticker
+                'الرمز' : display_ticker = ticker.replace('.SR', '') if ticker.replace('.SR', '').isdigit() else ticker
                 results[display_ticker] = {
                     'الاسم': ticker_to_arabic_name.get(ticker, 'غير معروف'),
                     'السعر الحالي': round(current_price, 2),
