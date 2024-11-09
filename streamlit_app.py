@@ -220,8 +220,6 @@ ticker_to_arabic_name = {
     '8310.SR': 'أمانة للتأمين ',
     '8311.SR': 'عناية'
 }
-name = yf.Ticker(ticker).info.get('longName', 'N/A')
-arabic_name = ticker_to_arabic_name.get(ticker_to_arabic_name, name)
 
 def check_tickers(tickers, percentage):
     results = {}
@@ -245,7 +243,7 @@ def check_tickers(tickers, percentage):
                 display_ticker = ticker.replace('.SR', '') if ticker.replace('.SR', '').isdigit() else ticker
                 results[display_ticker] = {
                     'الرمز' : display_ticker,
-                    'الاسم': arabic_name,
+                    'الاسم': ticker_to_arabic_name.get(ticker, 'غير معروف'),
                     'السعر الحالي': round(current_price, 2),
                     'القاع السنوي': round(lowest_price, 2)
                 }
