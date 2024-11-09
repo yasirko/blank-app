@@ -246,7 +246,7 @@ def check_tickers(tickers, percentage):
                     'الرمز' : display_ticker,
                     'الاسم': ticker_to_arabic_name.get(ticker, 'غير معروف'),
                     'السعر الحالي': round(current_price, 2),
-                    'القاع السنوي': round(lowest_price, 2)
+                    'القاع السنوي': round(lowest_price, 2),
                     'نسبة الفرق': round(per, 2)
                 }
         except Exception as e:
