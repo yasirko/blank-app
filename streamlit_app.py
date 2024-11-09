@@ -221,6 +221,11 @@ ticker_to_arabic_name = {
     '8311.SR': 'عناية'
 }
 
+def get_long_name(ticker):
+    """Fetch the long name of the ticker from Yahoo Finance."""
+    stock = yf.Ticker(ticker)
+    return stock.info.get('longName', 'غير معروف')
+
 def check_tickers(tickers, percentage):
     results = {}
     multiplier = 1 + (percentage / 100)  # Convert percentage to a multiplier
@@ -241,9 +246,13 @@ def check_tickers(tickers, percentage):
             if lowest_price <= current_price <= lowest_price * multiplier:
                 # Remove '.SR' if the ticker is a number
                 display_ticker = ticker.replace('.SR', '') if ticker.replace('.SR', '').isdigit() else ticker
+                
+                # Get the Arabic name or fetch the long name from Yahoo Finance if not available
+                arabic_name = ticker_to_arabic_name.get(ticker, get_long_name(ticker))
+                
                 results[display_ticker] = {
-                    'الرمز' : display_ticker,
-                    'الاسم': ticker_to_arabic_name.get(ticker, 'غير معروف'),
+                    'الرمز': display_ticker,
+                    'الاسم': arabic_name,
                     'السعر الحالي': round(current_price, 2),
                     'القاع السنوي': round(lowest_price, 2)
                 }
@@ -255,7 +264,7 @@ def check_tickers(tickers, percentage):
 # Streamlit app
 st.title("فاحص القاع السنوي للأسهم")
 
-# Input for tickers
+
 # Input for tickers
 default_tickers = ', '.join([
     '1010.SR', '1020.SR', '1030.SR', '1050.SR', '1060.SR', '1080.SR', 
