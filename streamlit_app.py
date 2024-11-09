@@ -240,12 +240,14 @@ def check_tickers(tickers, percentage):
             # Check if current price is between lowest price and lowest price * multiplier
             if lowest_price <= current_price <= lowest_price * multiplier:
                 # Remove '.SR' if the ticker is a number
+                per = (current_price - lowest_price) / lowest_price * 100
                 display_ticker = ticker.replace('.SR', '') if ticker.replace('.SR', '').isdigit() else ticker
                 results[display_ticker] = {
                     'الرمز' : display_ticker,
                     'الاسم': ticker_to_arabic_name.get(ticker, 'غير معروف'),
                     'السعر الحالي': round(current_price, 2),
                     'القاع السنوي': round(lowest_price, 2)
+                    'نسبة الفرق': round(per, 2)
                 }
         except Exception as e:
             st.error(f"خطأ في معالجة {ticker}: {str(e)}")
