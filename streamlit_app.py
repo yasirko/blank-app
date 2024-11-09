@@ -220,8 +220,8 @@ ticker_to_arabic_name = {
     '8310.SR': 'أمانة للتأمين ',
     '8311.SR': 'عناية'
 }
-name = yf.Ticker(default_tickers).info.get('longName', 'N/A')
-arabic_name = ticker_to_arabic_name.get(ticker, name)
+name = yf.Ticker(ticker).info.get('longName', 'N/A')
+arabic_name = ticker_to_arabic_name.get(ticker_to_arabic_name, name)
 
 def check_tickers(tickers, percentage):
     results = {}
