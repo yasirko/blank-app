@@ -256,6 +256,7 @@ def check_tickers(tickers, percentage):
 st.title("فاحص القاع السنوي للأسهم")
 
 # Input for tickers
+# Input for tickers
 default_tickers = ', '.join([
     '1010.SR', '1020.SR', '1030.SR', '1050.SR', '1060.SR', '1080.SR', 
     '1111.SR', '1120.SR', '1140.SR', '1150.SR', '1180.SR', '1182.SR', 
