@@ -78,21 +78,21 @@ tickers_input = st.text_area("Enter stock tickers (comma-separated)", value=defa
 tickers_to_check = [ticker.strip() for ticker in tickers_input.split(',')]
 
 # Input for percentage
-percentage_input = st.number_input("Enter the percentage for upper limit", 
+percentage_input = st.number_input("أدخل نسبة مستوي الفحص من القاع السنوي مثلا 10 تعني 10%", 
                                     min_value=0.0, 
                                     max_value=100.0, 
                                     value=10.0,
                                     step=0.1)
 
 # Button to check prices
-if st.button("Check Prices"):
+if st.button("فحص الاسعار"):
     with st.spinner("Checking prices..."):
         result = check_tickers(tickers_to_check, percentage_input)
     
     # Display results
     if result:
-        st.success("Stocks within the price range:")
+        st.success("الاسهم التي سعرها اعلي من القاع السنوي ولا تزيد عن النسبة المدخلة من القاع السنوي")
         df = pd.DataFrame.from_dict(result, orient='index')
         st.dataframe(df)
     else:
-        st.warning("No stocks found within the specified price range.")
+        st.warning("لا يوجد اسهم تطابق الفحص")
