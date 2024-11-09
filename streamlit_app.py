@@ -301,9 +301,6 @@ default_tickers = ', '.join([
 # Convert default_tickers to uppercase
 default_tickers = default_tickers.upper()
 tickers_input = st.text_area("أدخل رموز الأسهم (مفصولة بفواصل)", value=default_tickers)
-#tickers_to_check = [ticker.strip() for ticker in tickers_input.split(',')]
-
-# Convert user input to uppercase
 tickers_to_check = [ticker.strip().upper() for ticker in tickers_input.split(',')]
 
 
