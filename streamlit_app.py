@@ -242,7 +242,7 @@ def check_tickers(tickers, percentage):
                 results[ticker] = {
                     'الاسم': ticker_to_arabic_name.get(ticker, 'غير معروف'),
                     'السعر الحالي': round(current_price, 2),
-                    'أدنى سعر خلال 52 أسبوع': round(lowest_price, 2)
+                    'القاع السنوي': round(lowest_price, 2)
                 }
         except Exception as e:
             st.error(f"خطأ في معالجة {ticker}: {str(e)}")
