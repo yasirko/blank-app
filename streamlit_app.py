@@ -221,6 +221,15 @@ ticker_to_arabic_name = {
     '8311.SR': 'عناية'
 }
 
+def fetch_long_name_from_yahoo(ticker):
+    """Fetch the long name of the stock from Yahoo Finance."""
+    try:
+        stock = yf.Ticker(ticker)
+        return stock.info.get('longName', 'غير معروف')
+    except Exception as e:
+        st.error(f"خطأ في جلب الاسم من ياهو: {str(e)}")
+        return 'غير معروف'
+
 def check_tickers(tickers, percentage):
     results = {}
     multiplier = 1 + (percentage / 100)  # Convert percentage to a multiplier
@@ -241,9 +250,15 @@ def check_tickers(tickers, percentage):
             if lowest_price <= current_price <= lowest_price * multiplier:
                 # Remove '.SR' if the ticker is a number
                 display_ticker = ticker.replace('.SR', '') if ticker.replace('.SR', '').isdigit() else ticker
+                
+                # Get Arabic name or fallback to the long name from Yahoo Finance if not found
+                arabic_name = ticker_to_arabic_name.get(ticker)
+                if arabic_name is None or arabic_name == 'غير معروف':
+                    arabic_name = fetch_long_name_from_yahoo(ticker)
+                
                 results[display_ticker] = {
                     'الرمز' : display_ticker,
-                    'الاسم': ticker_to_arabic_name.get(ticker, 'غير معروف'),
+                    'الاسم': arabic_name,
                     'السعر الحالي': round(current_price, 2),
                     'القاع السنوي': round(lowest_price, 2)
                 }
@@ -257,7 +272,7 @@ st.title("فاحص القاع السنوي للأسهم")
 
 # Input for tickers
 default_tickers = ', '.join([
-    '1010.SR', '1020.SR', '1030.SR', '1050.SR', '1060.SR', '1080.SR', 
+'1010.SR', '1020.SR', '1030.SR', '1050.SR', '1060.SR', '1080.SR', 
     '1111.SR', '1120.SR', '1140.SR', '1150.SR', '1180.SR', '1182.SR', 
     '1183.SR', '1201.SR', '1202.SR', '1210.SR', '1211.SR', '1212.SR', 
     '1213.SR', '1214.SR', '1301.SR', '1302.SR', '1303.SR', '1304.SR', 
@@ -273,6 +288,68 @@ default_tickers = ', '.join([
     '2380.SR', '2381.SR', '2382.SR', '3002.SR', '3003.SR', '3004.SR', 
     '3005.SR', '3007.SR', '3008.SR', '3010.SR', '3020.SR', '3030.SR', 
     '3040.SR', '3050.SR', '3060.SR', '3080.SR', '3090.SR', '3091.SR', 
+    '3092.SR', '4001.SR', '4002.SR', '4003.SR', '4004.SR', '4005.SR', 
+    '4006.SR', '4007.SR', '4008.SR', '4009.SR', '4011.SR', '4012.SR', 
+    '4013.SR', '4014.SR', '4015.SR', '4020.SR', '4030.SR', '4031.SR', 
+    '4040.SR', '4050.SR', '4051.SR', '4061.SR', '4070.SR', '4071.SR', 
+    '4080.SR', '4081.SR', '4082.SR', '4090.SR', '4100.SR', '4110.SR', 
+    '4130.SR', '4140.SR', '4141.SR', '4142.SR', '4150.SR', '4160.SR', 
+    '4161.SR', '4162.SR', '4163.SR', '4164.SR', '4170.SR', '4180.SR', 
+    '4190.SR', '4191.SR', '4192.SR', '4200.SR', '4210.SR', '4220.SR', 
+    '4230.SR', '4240.SR', '4250.SR', '4260.SR', '4261.SR', '4262.SR', 
+    '4263.SR', '4270.SR', '4280.SR', '4290.SR', '4291.SR', '4292.SR', 
+    '4300.SR', '4310.SR', '4320.SR', '4321.SR', '4322.SR', '4323.SR', 
+    '4330.SR', '4331.SR', '4332.SR', '4333.SR', '4334.SR', '4335.SR', 
+    '4336.SR', '4337.SR', '4338.SR', '4339.SR', '4340.SR', '4342.SR', 
+    '4344.SR', '4345.SR', '4346.SR', '4347.SR', '4348.SR', '4349.SR', 
+    '5110.SR', '6001.SR', '6002.SR', '6004.SR', '6010.SR', '6012.SR', 
+    '6013.SR', '6014.SR', '6015.SR', '6020.SR', '6040.SR', '6050.SR', 
+    '6060.SR', '6070.SR', '6090.SR', '7010.SR', '7020.SR', '7030.SR', 
+    '7040.SR', '7200.SR', '7201.SR', '7202.SR', '7203.SR', '7204.SR', 
+    '8010.SR', '8012.SR', '8020.SR', '8030.SR', '8040.SR', '8050.SR', 
+    '8060.SR', '8070.SR', '8100.SR', '8120.SR', '8150.SR', '8160.SR', 
+    '8170.SR', '8180.SR', '8190.SR', '8200.SR', '8210.SR', '8230.SR', 
+    '8240.SR', '8250.SR', '8260.SR', '8270.SR', '8280.SR', '8300.SR', 
+    '8310.SR', '8311.SR'
+])
+tickers_input = st.text_area("أدخل رموز الأسهم (مفصولة بفواصل)", value=default_tickers)
+tickers_to_check = [ticker.strip() for ticker in tickers_input.split(',')]
+
+# Input for percentage
+percentage_input = st.number_input("أدخل نسبة مستوى الفحص من القاع السنوي (مثلا 10 تعني 10%)", 
+                                    min_value=0.0, 
+                                    max_value=100.0, 
+                                    value=10.0,
+                                    step=0.1)
+
+# Button to check prices
+if st.button("فحص الأسعار"):
+    with st.spinner("جاري فحص الأسعار..."):
+        result = check_tickers(tickers_to_check, percentage_input)
+    
+    # Display results
+    if result:
+        st.success("الأسهم التي سعرها أعلى من القاع السنوي ولا تزيد عن النسبة المدخلة من القاع السنوي:")
+        df = pd.DataFrame.from_dict(result, orient='index')
+        st.dataframe(df)
+    else:
+        st.warning("لا توجد أسهم تطابق معايير الفحص")
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     '3092.SR', '4001.SR', '4002.SR', '4003.SR', '4004.SR', '4005.SR', 
     '4006.SR', '4007.SR', '4008.SR', '4009.SR', '4011.SR', '4012.SR', 
     '4013.SR', '4014.SR', '4015.SR', '4020.SR', '4030.SR', '4031.SR', 
