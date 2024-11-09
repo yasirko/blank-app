@@ -247,7 +247,7 @@ def check_tickers(tickers, percentage):
                     'اسم الشركة': arabic_name,
                 display_ticker = ticker.replace('.SR', '') if ticker.replace('.SR', '').isdigit() else ticker
                 results[display_ticker] = {
-                    'الرمز' : display_ticker,
+                    'الرمز' : arabic_name,
                     'الاسم': ticker_to_arabic_name.get(ticker, 'غير معروف'),
                     'السعر الحالي': round(current_price, 2),
                     'القاع السنوي': round(lowest_price, 2)
